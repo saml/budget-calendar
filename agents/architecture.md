@@ -12,6 +12,13 @@
 
 No backend. Single-user. All data is stored in `localStorage`.
 
+## Implemented app shape
+
+- Landing view: budget list + create/delete
+- Detail view: budget header + category manager + FullCalendar week/day view
+- Activity editor: modal add/edit/delete form
+- Routing: local `useState` in `App.tsx`
+
 ## Domain Model
 
 See [CONTEXT.md](../CONTEXT.md) for canonical terminology. Summary:
@@ -55,9 +62,11 @@ type Activity = {
 
 All Budgets are stored as a JSON array under the key `budget-calendar:budgets` in `localStorage`.
 
+Zustand persists only `budgets`; `activeBudgetId` stays in memory.
+
 ## Calendar View
 
 FullCalendar renders Activities as timed events in a day/week view. Each Activity maps to a FullCalendar event:
 - `start`: combined date + time
 - `title`: description (+ cost if present)
-- `extendedProps`: full Activity data for the detail panel
+- `extendedProps`: `{ activity, date }`

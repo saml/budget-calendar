@@ -1,27 +1,25 @@
 # About
 
-Single-user travel budget calendar web app. Users create Budgets (date range + currency), populate each Day with time-stamped Activities (optional cost + category), and view the full itinerary hour-by-hour on a calendar.
+Single-user travel budget calendar web app. React + Vite + TypeScript + FullCalendar + Zustand + Tailwind CSS.
 
-No backend. All data lives in `localStorage`. See [CONTEXT.md](CONTEXT.md) for domain language and [docs/adr/](docs/adr/) for architectural decisions.
+Domain summary:
+- Budget: date range + currency + categories + days
+- Day: one date in a budget
+- Activity: time-stamped item with optional cost/category
+- Category: scoped to one budget
 
-# Architecture
-
-See [agents/architecture.md](agents/architecture.md) for implementation details.
+No backend; persistence is via Zustand `persist` to `localStorage`.
 
 # Workflow
 
-1. Use TDD (use /tdd skill)
-2. Update memory files in [agents/](agents/) directory.
-3. Do not run git. User manages git.
+1. Use TDD.
+2. Update memory files in `agents/` when implementation details change.
+3. Do not run git.
 
-# Build
+# Build / test
 
-See [agents/build.md](agents/build.md).
-
-# Test
-
-See [agents/test.md](agents/test.md).
+See `agents/build.md` and `agents/test.md`.
 
 # Folder structure
 
-See [agents/folder.md](agents/folder.md).
+See `agents/folder.md`.

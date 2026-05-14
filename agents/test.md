@@ -7,13 +7,8 @@
 ## Run all tests
 
 ```sh
-npm test
-```
-
-Or in watch mode:
-
-```sh
-npm run test:watch
+nvm use 24
+npm test -- --run
 ```
 
 ## Test file conventions
@@ -26,3 +21,4 @@ npm run test:watch
 - TDD: write tests first, then implement
 - Use `@testing-library/react` for component tests
 - Pure logic (store reducers, date utilities) tested without React
+- `src/test-setup.ts` loads `@testing-library/jest-dom`
