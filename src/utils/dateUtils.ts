@@ -18,6 +18,12 @@ function formatTitle(activity: Activity) {
     : `${activity.description} (${activity.cost})`
 }
 
+export function budgetDurationDays(startDate: string, endDate: string): number {
+  const start = new Date(`${startDate}T00:00:00`)
+  const end = new Date(`${endDate}T00:00:00`)
+  return Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+}
+
 export function generateDays(startDate: string, endDate: string): Day[] {
   const days: Day[] = []
   const current = toDate(startDate)

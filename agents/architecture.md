@@ -70,3 +70,5 @@ FullCalendar renders Activities as timed events in a day/week view. Each Activit
 - `start`: combined date + time
 - `title`: description (+ cost if present)
 - `extendedProps`: `{ activity, date }`
+
+The detail calendar now also supports an Itinerary view that defaults on open and spans the full budget date range with a custom `timeGrid` duration.

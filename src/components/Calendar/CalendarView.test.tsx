@@ -1,18 +1,24 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import type { Budget } from '../../types'
 import { CalendarView } from './CalendarView'
+
+const budget: Budget = {
+  id: 'budget-1',
+  name: 'Trip',
+  startDate: '2025-09-01',
+  endDate: '2025-09-10',
+  currency: 'USD',
+  categories: [],
+  days: [],
+}
 
 describe('CalendarView', () => {
   it('renders activities in the calendar', () => {
     render(
       <CalendarView
         budget={{
-          id: 'budget-1',
-          name: 'Trip',
-          startDate: '2025-09-01',
-          endDate: '2025-09-07',
-          currency: 'USD',
-          categories: [],
+          ...budget,
           days: [
             {
               date: '2025-09-01',
@@ -30,5 +36,18 @@ describe('CalendarView', () => {
     )
 
     expect(screen.getByText('Museum')).toBeInTheDocument()
+  })
+
+  it('renders an Itinerary toolbar button', () => {
+    render(<CalendarView budget={budget} />)
+
+    expect(screen.getByText('Itinerary')).toBeInTheDocument()
+  })
+
+  it('renders Day and Week toolbar buttons', () => {
+    render(<CalendarView budget={budget} />)
+
+    expect(screen.getByText('Day')).toBeInTheDocument()
+    expect(screen.getByText('Week')).toBeInTheDocument()
   })
 })

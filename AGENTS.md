@@ -7,6 +7,7 @@ Domain summary:
 - Day: one date in a budget
 - Activity: time-stamped item with optional cost/category
 - Category: scoped to one budget
+- Calendar detail view defaults to an Itinerary time-grid that spans the full budget date range.
 
 No backend; persistence is via Zustand `persist` to `localStorage`.
 

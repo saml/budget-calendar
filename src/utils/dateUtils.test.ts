@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateDays, toCalendarEvent } from './dateUtils'
+import { budgetDurationDays, generateDays, toCalendarEvent } from './dateUtils'
 
 describe('dateUtils', () => {
   it('generates days for an inclusive date range', () => {
@@ -54,5 +54,15 @@ describe('dateUtils', () => {
     const activity = { id: 'a1', time: '14:00', description: 'Walk' }
 
     expect(toCalendarEvent(activity, '2025-01-03').title).toBe('Walk')
+  })
+})
+
+describe('budgetDurationDays', () => {
+  it('returns 1 for a single-day budget', () => {
+    expect(budgetDurationDays('2025-01-05', '2025-01-05')).toBe(1)
+  })
+
+  it('returns 10 for a 10-day budget', () => {
+    expect(budgetDurationDays('2025-01-01', '2025-01-10')).toBe(10)
   })
 })

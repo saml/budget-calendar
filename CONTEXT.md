@@ -13,7 +13,7 @@ A specific calendar date within a Budget's date range.
 _Avoid_: Date, entry-date
 
 **Activity**:
-A time-stamped item on a Day with a description, an optional cost, and an optional category. The atomic unit of both the itinerary and the budget.
+A time-stamped item on a Day with a description, an optional unit cost, an optional count, an optional category, and a duration. Total price = unit cost × count. Count is only meaningful when a cost is set. The atomic unit of both the itinerary and the budget. Duration defaults to 30 minutes and count defaults to 1 when unspecified.
 _Avoid_: Expense, entry, event, line item
 
 **Category**:

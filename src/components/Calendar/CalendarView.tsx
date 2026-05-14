@@ -3,7 +3,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useState } from 'react'
 import type { Activity, Budget } from '../../types'
-import { toCalendarEvent } from '../../utils/dateUtils'
+import { budgetDurationDays, toCalendarEvent } from '../../utils/dateUtils'
 import { ActivityForm } from '../Activity/ActivityForm'
 
 type ModalState = { date: string; activity?: Activity } | null
@@ -23,19 +23,31 @@ function addDays(date: string, days: number) {
 
 export function CalendarView({ budget }: CalendarViewProps) {
   const [modalState, setModalState] = useState<ModalState>(null)
+  const [currentView, setCurrentView] = useState('timeGridItinerary')
+  const durationDays = budgetDurationDays(budget.startDate, budget.endDate)
+  const isItinerary = currentView === 'timeGridItinerary'
 
   return (
     <div className="relative p-4">
       <FullCalendar
         plugins={[timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
+        initialView="timeGridItinerary"
+        buttonText={{ day: 'Day', week: 'Week', today: 'Today' }}
         initialDate={budget.startDate}
+        views={{
+          timeGridItinerary: {
+            type: 'timeGrid',
+            duration: { days: durationDays },
+            buttonText: 'Itinerary',
+          },
+        }}
         validRange={{ start: budget.startDate, end: addDays(budget.endDate, 1) }}
         headerToolbar={{
-          left: 'prev,next today',
+          left: isItinerary ? '' : 'prev,next today',
           center: 'title',
-          right: 'timeGridDay,timeGridWeek',
+          right: 'timeGridDay,timeGridWeek,timeGridItinerary',
         }}
+        datesSet={(info) => setCurrentView(info.view.type)}
         events={budget.days.flatMap((day) =>
           day.activities.map((activity) => toCalendarEvent(activity, day.date)),
         )}
