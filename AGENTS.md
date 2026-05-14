@@ -1,6 +1,8 @@
 # About
 
-Budget helper web app.
+Single-user travel budget calendar web app. Users create Budgets (date range + currency), populate each Day with time-stamped Activities (optional cost + category), and view the full itinerary hour-by-hour on a calendar.
+
+No backend. All data lives in `localStorage`. See [CONTEXT.md](CONTEXT.md) for domain language and [docs/adr/](docs/adr/) for architectural decisions.
 
 # Architecture
 
@@ -14,13 +16,12 @@ See [agents/architecture.md](agents/architecture.md) for implementation details.
 
 # Build
 
-Build instruction is at [agents/build.md](agents/build.md).
-Use JDK 21 when running Gradle locally.
+See [agents/build.md](agents/build.md).
 
 # Test
 
-Test instruction is at [agents/test.md](agents/test.md).
+See [agents/test.md](agents/test.md).
 
 # Folder structure
 
-Folder structure is at [agents/folder.md](agents/folder.md).
+See [agents/folder.md](agents/folder.md).
