@@ -29,6 +29,8 @@ describe('ActivityForm', () => {
     expect(screen.getByLabelText('Time')).toHaveValue('')
     expect(screen.getByLabelText('Description')).toHaveValue('')
     expect((screen.getByLabelText('Cost') as HTMLInputElement).value).toBe('')
+    expect(screen.getByLabelText('Duration')).toHaveValue(30)
+    expect(screen.queryByLabelText('Count')).not.toBeInTheDocument()
   })
 
   it('renders an edit form with values', () => {
@@ -50,7 +52,75 @@ describe('ActivityForm', () => {
     expect(screen.getByLabelText('Time')).toHaveValue('09:00')
     expect(screen.getByLabelText('Description')).toHaveValue('Breakfast')
     expect(screen.getByLabelText('Cost')).toHaveValue(14)
+    expect(screen.getByLabelText('Duration')).toHaveValue(30)
+    expect(screen.getByLabelText('Count')).toHaveValue(1)
     expect(screen.getByLabelText('Category')).toHaveValue('cat-1')
+  })
+
+  it('renders a duration field for edit mode values', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        activity={{
+          id: 'activity-1',
+          time: '09:00',
+          description: 'Breakfast',
+          duration: 45,
+        }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Duration')).toHaveValue(45)
+  })
+
+  it('pre-fills count from activity in edit mode', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        activity={{
+          id: 'activity-1',
+          time: '09:00',
+          description: 'Breakfast',
+          cost: 14,
+          count: 3,
+        }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Count')).toHaveValue(3)
+  })
+
+  it('shows count when cost is set', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        activity={{
+          id: 'activity-1',
+          time: '09:00',
+          description: 'Breakfast',
+          cost: 14,
+        }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Count')).toHaveValue(1)
+  })
+
+  it('hides count when cost is empty', async () => {
+    const user = userEvent.setup()
+
+    render(<ActivityForm budget={budget} date="2025-08-01" onClose={() => {}} />)
+
+    expect(screen.queryByLabelText('Count')).not.toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Cost'), '5')
+    expect(screen.getByLabelText('Count')).toHaveValue(1)
   })
 
   it('adds an activity from the form', async () => {
@@ -67,6 +137,10 @@ describe('ActivityForm', () => {
     await user.type(screen.getByLabelText('Description'), 'Coffee')
     await user.clear(screen.getByLabelText('Cost'))
     await user.type(screen.getByLabelText('Cost'), '5')
+    await user.clear(screen.getByLabelText('Duration'))
+    await user.type(screen.getByLabelText('Duration'), '45')
+    await user.clear(screen.getByLabelText('Count'))
+    await user.type(screen.getByLabelText('Count'), '3')
     await user.click(screen.getByRole('button', { name: 'Add activity' }))
 
     expect(useBudgetStore.getState().budgets[0].days[0].activities[0]).toMatchObject(
@@ -74,9 +148,56 @@ describe('ActivityForm', () => {
         time: '08:30',
         description: 'Coffee',
         cost: 5,
+        count: 3,
+        duration: 45,
       },
     )
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('passes duration to the store when adding an activity', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    useBudgetStore.setState({
+      budgets: [{ ...budget, days: [{ date: '2025-08-01', activities: [] }] }],
+      activeBudgetId: budget.id,
+    })
+
+    render(<ActivityForm budget={budget} date="2025-08-01" onClose={onClose} />)
+
+    await user.type(screen.getByLabelText('Time'), '08:30')
+    await user.type(screen.getByLabelText('Description'), 'Coffee')
+    await user.clear(screen.getByLabelText('Duration'))
+    await user.type(screen.getByLabelText('Duration'), '45')
+    await user.click(screen.getByRole('button', { name: 'Add activity' }))
+
+    expect(useBudgetStore.getState().budgets[0].days[0].activities[0]).toMatchObject({
+      duration: 45,
+    })
+  })
+
+  it('passes count to the store when cost is set', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    useBudgetStore.setState({
+      budgets: [{ ...budget, days: [{ date: '2025-08-01', activities: [] }] }],
+      activeBudgetId: budget.id,
+    })
+
+    render(<ActivityForm budget={budget} date="2025-08-01" onClose={onClose} />)
+
+    await user.type(screen.getByLabelText('Time'), '08:30')
+    await user.type(screen.getByLabelText('Description'), 'Coffee')
+    await user.clear(screen.getByLabelText('Cost'))
+    await user.type(screen.getByLabelText('Cost'), '5')
+    await user.clear(screen.getByLabelText('Count'))
+    await user.type(screen.getByLabelText('Count'), '3')
+    await user.click(screen.getByRole('button', { name: 'Add activity' }))
+
+    expect(useBudgetStore.getState().budgets[0].days[0].activities[0]).toMatchObject({
+      cost: 5,
+      count: 3,
+    })
   })
 
   it('deletes an activity in edit mode', async () => {

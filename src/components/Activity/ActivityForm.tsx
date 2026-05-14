@@ -24,6 +24,8 @@ export function ActivityForm({
   const [cost, setCost] = useState(
     activity?.cost === undefined ? '' : String(activity.cost),
   )
+  const [duration, setDuration] = useState(activity?.duration ?? 30)
+  const [count, setCount] = useState(activity?.count ?? 1)
   const [categoryId, setCategoryId] = useState(activity?.categoryId ?? '')
 
   const isEditMode = Boolean(activity)
@@ -50,7 +52,9 @@ export function ActivityForm({
               time,
               description: description.trim(),
               cost: cost === '' ? undefined : Number(cost),
+              count: cost === '' ? undefined : count,
               categoryId: categoryId || undefined,
+              duration,
             }
 
             if (isEditMode && activity) {
@@ -72,6 +76,17 @@ export function ActivityForm({
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
+            Duration (minutes)
+            <input
+              aria-label="Duration"
+              type="number"
+              min={1}
+              className="rounded border border-neutral-300 bg-white px-2 py-1.5 dark:border-neutral-600 dark:bg-neutral-800"
+              value={duration}
+              onChange={(event) => setDuration(Number(event.target.value))}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
             Description
             <input
               aria-label="Description"
@@ -90,6 +105,19 @@ export function ActivityForm({
               onChange={(event) => setCost(event.target.value)}
             />
           </label>
+          {cost !== '' ? (
+            <label className="flex flex-col gap-1 text-sm">
+              Count
+              <input
+                aria-label="Count"
+                type="number"
+                min={1}
+                className="rounded border border-neutral-300 bg-white px-2 py-1.5 dark:border-neutral-600 dark:bg-neutral-800"
+                value={count}
+                onChange={(event) => setCount(Number(event.target.value))}
+              />
+            </label>
+          ) : null}
           <label className="flex flex-col gap-1 text-sm">
             Category
             <select

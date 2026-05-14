@@ -8,7 +8,9 @@ export type Activity = {
   time: string
   description: string
   cost?: number
+  count?: number
   categoryId?: string
+  duration?: number
 }
 
 export type Day = {

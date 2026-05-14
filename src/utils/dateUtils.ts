@@ -13,9 +13,9 @@ function toIsoDate(date: Date) {
 }
 
 function formatTitle(activity: Activity) {
-  return activity.cost === undefined
-    ? activity.description
-    : `${activity.description} (${activity.cost})`
+  if (activity.cost === undefined) return activity.description
+  const total = activity.cost * (activity.count ?? 1)
+  return `${activity.description} (${total})`
 }
 
 export function budgetDurationDays(startDate: string, endDate: string): number {
@@ -41,6 +41,7 @@ export function toCalendarEvent(activity: Activity, date: string): EventInput {
   return {
     id: activity.id,
     start: `${date}T${activity.time}:00`,
+    duration: { minutes: activity.duration ?? 30 },
     title: formatTitle(activity),
     extendedProps: {
       activity,

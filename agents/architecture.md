@@ -25,7 +25,7 @@ See [CONTEXT.md](../CONTEXT.md) for canonical terminology. Summary:
 
 - **Budget** — top-level entity. Has a name, start date, end date, single currency, and a list of user-defined Categories.
 - **Day** — a specific date within a Budget's date range. Contains zero or more Activities.
-- **Activity** — a time-stamped item on a Day. Has a description, a time, an optional cost (number), and an optional Category.
+- **Activity** — a time-stamped item on a Day. Has a description, a time, an optional cost (number), an optional count (positive integer), an optional duration in minutes, and an optional Category.
 - **Category** — a user-defined label scoped to one Budget (e.g., "transportation", "food", "hotel").
 
 ## Data Shape (localStorage)
@@ -56,6 +56,8 @@ type Activity = {
   time: string;        // "HH:mm"
   description: string;
   cost?: number;
+  count?: number;
+  duration?: number;   // minutes
   categoryId?: string;
 };
 ```
@@ -68,7 +70,8 @@ Zustand persists only `budgets`; `activeBudgetId` stays in memory.
 
 FullCalendar renders Activities as timed events in a day/week view. Each Activity maps to a FullCalendar event:
 - `start`: combined date + time
-- `title`: description (+ cost if present)
+- `duration`: activity duration in minutes, defaulting to 30
+- `title`: description (+ total cost if present)
 - `extendedProps`: `{ activity, date }`
 
 The detail calendar now also supports an Itinerary view that defaults on open and spans the full budget date range with a custom `timeGrid` duration.

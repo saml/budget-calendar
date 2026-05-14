@@ -42,6 +42,7 @@ describe('dateUtils', () => {
     expect(toCalendarEvent(activity, '2025-01-02')).toEqual({
       id: 'activity-1',
       start: '2025-01-02T09:30:00',
+      duration: { minutes: 30 },
       title: 'Breakfast (12)',
       extendedProps: {
         activity,
@@ -54,6 +55,54 @@ describe('dateUtils', () => {
     const activity = { id: 'a1', time: '14:00', description: 'Walk' }
 
     expect(toCalendarEvent(activity, '2025-01-03').title).toBe('Walk')
+  })
+
+  it('uses total cost when count is present', () => {
+    const activity = {
+      id: 'activity-2',
+      time: '10:00',
+      description: 'Taxi',
+      cost: 20,
+      count: 3,
+    }
+
+    expect(toCalendarEvent(activity, '2025-01-04').title).toBe('Taxi (60)')
+  })
+
+  it('defaults count to 1 when formatting total cost', () => {
+    const activity = {
+      id: 'activity-3',
+      time: '11:00',
+      description: 'Taxi',
+      cost: 20,
+    }
+
+    expect(toCalendarEvent(activity, '2025-01-04').title).toBe('Taxi (20)')
+  })
+
+  it('defaults duration to 30 minutes', () => {
+    const activity = {
+      id: 'activity-4',
+      time: '12:00',
+      description: 'Lunch',
+    }
+
+    expect(toCalendarEvent(activity, '2025-01-04')).toMatchObject({
+      duration: { minutes: 30 },
+    })
+  })
+
+  it('uses the activity duration when provided', () => {
+    const activity = {
+      id: 'activity-5',
+      time: '13:00',
+      description: 'Museum',
+      duration: 45,
+    }
+
+    expect(toCalendarEvent(activity, '2025-01-04')).toMatchObject({
+      duration: { minutes: 45 },
+    })
   })
 })
 
