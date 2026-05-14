@@ -1,0 +1,10 @@
+.plan/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Keystore (never commit signing keys)
+*.jks
+*.keystore
