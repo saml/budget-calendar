@@ -3,4 +3,5 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
+  @apply bg-neutral-50 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-50;
 }

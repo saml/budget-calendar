@@ -20,22 +20,30 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
   }, [budgetId, setActiveBudget])
 
   if (!budget) {
-    return <main>Budget not found</main>
+    return <main className="p-6">Budget not found</main>
   }
 
   return (
-    <main>
-      <header>
-        <button type="button" onClick={onBack}>
+    <main className="flex h-screen flex-col">
+      <header className="flex items-start gap-4 border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
+        <button
+          type="button"
+          onClick={onBack}
+          className="mt-1 text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+        >
           ← Back
         </button>
-        <h1>{budget.name}</h1>
-        <p>
+        <div className="flex-1">
+          <h1 className="text-xl font-semibold">{budget.name}</h1>
+          <p className="text-sm text-neutral-500">
           {budget.startDate} → {budget.endDate} · {budget.currency}
-        </p>
-        <CategoryManager />
+          </p>
+          <CategoryManager />
+        </div>
       </header>
-      <CalendarView budget={budget} />
+      <div className="flex-1 overflow-auto">
+        <CalendarView budget={budget} />
+      </div>
     </main>
   )
 }

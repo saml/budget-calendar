@@ -15,8 +15,8 @@ No backend. Single-user. All data is stored in `localStorage`.
 ## Implemented app shape
 
 - Landing view: budget list + create/delete
-- Detail view: budget header + category manager + FullCalendar week/day view
-- Activity editor: modal add/edit/delete form
+- Detail view: styled budget header + collapsible category manager + FullCalendar week/day view
+- Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
 
 ## Domain Model

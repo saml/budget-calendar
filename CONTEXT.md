@@ -27,6 +27,10 @@ _Avoid_: Tag, type, kind
 - An **Activity** belongs to exactly one **Day** and optionally one **Category**
 - A **Category** belongs to exactly one **Budget**
 
+**Itinerary view**:
+The calendar UI that displays all Days of a Budget as columns — one column per Day — showing the full trip at a glance. Distinct from the week view (fixed 7-column Sunday–Saturday grid) and the day view (single column).
+_Avoid_: Full view, trip view, all-days view
+
 ## Example dialogue
 
 > **Dev:** "Should the calendar show expenses or activities?"

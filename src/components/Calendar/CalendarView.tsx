@@ -25,7 +25,7 @@ export function CalendarView({ budget }: CalendarViewProps) {
   const [modalState, setModalState] = useState<ModalState>(null)
 
   return (
-    <div>
+    <div className="relative p-4">
       <FullCalendar
         plugins={[timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"

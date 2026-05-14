@@ -23,10 +23,13 @@ describe('CategoryManager', () => {
     days: [],
   }
 
-  it('renders existing categories', () => {
+  it('renders existing categories', async () => {
+    const user = userEvent.setup()
     useBudgetStore.setState({ budgets: [budget], activeBudgetId: budget.id })
 
     render(<CategoryManager />)
+
+    await user.click(screen.getByRole('button', { name: /Categories/ }))
 
     expect(screen.getByText('Food')).toBeInTheDocument()
     expect(screen.getByText('Transit')).toBeInTheDocument()
@@ -38,6 +41,7 @@ describe('CategoryManager', () => {
 
     render(<CategoryManager />)
 
+    await user.click(screen.getByRole('button', { name: /Categories/ }))
     await user.type(screen.getByLabelText('Category name'), 'Lodging')
     await user.click(screen.getByRole('button', { name: 'Add' }))
 
@@ -50,10 +54,32 @@ describe('CategoryManager', () => {
 
     render(<CategoryManager />)
 
-    await user.click(screen.getAllByRole('button', { name: '✕' })[0])
+    await user.click(screen.getByRole('button', { name: /Categories/ }))
+    await user.click(screen.getAllByRole('button', { name: /Delete category/i })[0])
 
     expect(useBudgetStore.getState().budgets[0].categories).toEqual([
       { id: 'cat-2', name: 'Transit' },
     ])
+  })
+
+  it('is collapsed by default and hides the category list', () => {
+    useBudgetStore.setState({ budgets: [budget], activeBudgetId: budget.id })
+
+    render(<CategoryManager />)
+
+    expect(screen.queryByText('Food')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Category name')).not.toBeInTheDocument()
+  })
+
+  it('expands when toggle button is clicked', async () => {
+    const user = userEvent.setup()
+    useBudgetStore.setState({ budgets: [budget], activeBudgetId: budget.id })
+
+    render(<CategoryManager />)
+
+    await user.click(screen.getByRole('button', { name: /Categories/ }))
+
+    expect(screen.getByText('Food')).toBeInTheDocument()
+    expect(screen.getByLabelText('Category name')).toBeInTheDocument()
   })
 })
