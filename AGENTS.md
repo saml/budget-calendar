@@ -32,3 +32,4 @@ See `agents/folder.md`.
 - Budget detail now has a local calendar/table toggle, and the table view supports styled inline editing for category, description, count, and cost with client-side sorting by date or category.
 - Budget list now supports JSON export per row and single-budget JSON import beside the create form. Imported budgets are remapped to fresh IDs.
 - Theme preference is a separate persisted Zustand store with a 3-way Light/Dark/System toggle, and App owns the document-level `dark` class sync.
+- GitHub Pages deployment uses Vite `base: '/budget-calendar/'` and a GitHub Actions workflow that publishes `dist/` to the `gh-pages` branch from `master`.

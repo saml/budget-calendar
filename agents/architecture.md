@@ -27,6 +27,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Table view: styled activity table flattens budget days into rows, sorts client-side by date or category, and supports inline edits for category, description, count, and cost while keeping datetime and total price read-only.
 - Import/export helpers parse single-budget JSON, ignore extra fields, and remap imported IDs so budgets never overwrite existing ones.
 - App syncs the theme store with the root `dark` class and system color-scheme changes.
+- GitHub Pages deployment is static: Vite builds under `/budget-calendar/` and GitHub Actions publishes `dist/` to `gh-pages` on pushes to `master`.
 
 ## Domain Model
 
