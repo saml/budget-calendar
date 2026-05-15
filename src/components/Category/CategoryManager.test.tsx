@@ -81,4 +81,15 @@ describe('CategoryManager', () => {
     expect(screen.getByText('Food')).toBeInTheDocument()
     expect(screen.getByLabelText('Category name')).toBeInTheDocument()
   })
+
+  it('renders a colored dot for each category', async () => {
+    const user = userEvent.setup()
+    useBudgetStore.setState({ budgets: [budget], activeBudgetId: budget.id })
+
+    render(<CategoryManager />)
+    await user.click(screen.getByRole('button', { name: /Categories/ }))
+
+    const dots = screen.getAllByTestId('category-color-dot')
+    expect(dots).toHaveLength(2)
+  })
 })

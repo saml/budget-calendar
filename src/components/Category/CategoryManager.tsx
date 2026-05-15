@@ -1,5 +1,6 @@
 import { useBudgetStore } from '../../store/budgetStore'
 import { useState } from 'react'
+import { CATEGORY_COLORS } from '../../utils/dateUtils'
 
 export function CategoryManager() {
   const budget = useBudgetStore((state) =>
@@ -23,11 +24,16 @@ export function CategoryManager() {
       </button>
       {open ? (
         <div className="mt-2 flex flex-wrap items-center gap-2">
-          {budget.categories.map((category) => (
+          {budget.categories.map((category, index) => (
             <span
               key={category.id}
               className="flex items-center gap-1 rounded-full bg-neutral-200 px-2 py-0.5 text-sm dark:bg-neutral-700"
             >
+              <span
+                data-testid="category-color-dot"
+                className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
+                style={{ backgroundColor: CATEGORY_COLORS[index % CATEGORY_COLORS.length] }}
+              />
               {category.name}
               <button
                 type="button"

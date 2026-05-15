@@ -1,5 +1,18 @@
 import type { EventInput } from '@fullcalendar/core'
-import type { Activity, Day } from '../types'
+import type { Activity, Category, Day } from '../types'
+
+export const CATEGORY_COLORS = [
+  '#4f86c6',
+  '#e06c4a',
+  '#56a35a',
+  '#b84f9e',
+  '#e0c24a',
+  '#4ac0b8',
+  '#e04a68',
+  '#8b6de0',
+  '#7da85a',
+  '#e0874a',
+]
 
 function toDate(date: string) {
   return new Date(`${date}T00:00:00`)
@@ -24,6 +37,13 @@ export function budgetDurationDays(startDate: string, endDate: string): number {
   return Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
 }
 
+export function getCategoryColor(categories: Category[], categoryId?: string): string | undefined {
+  if (!categoryId) return undefined
+  const index = categories.findIndex((category) => category.id === categoryId)
+  if (index === -1) return undefined
+  return CATEGORY_COLORS[index % CATEGORY_COLORS.length]
+}
+
 export function generateDays(startDate: string, endDate: string): Day[] {
   const days: Day[] = []
   const current = toDate(startDate)
@@ -37,8 +57,12 @@ export function generateDays(startDate: string, endDate: string): Day[] {
   return days
 }
 
-export function toCalendarEvent(activity: Activity, date: string): EventInput {
-  return {
+export function toCalendarEvent(
+  activity: Activity,
+  date: string,
+  backgroundColor?: string,
+): EventInput {
+  const event: EventInput = {
     id: activity.id,
     start: `${date}T${activity.time}:00`,
     duration: { minutes: activity.duration ?? 30 },
@@ -48,4 +72,6 @@ export function toCalendarEvent(activity: Activity, date: string): EventInput {
       date,
     },
   }
+  if (backgroundColor) event.backgroundColor = backgroundColor
+  return event
 }

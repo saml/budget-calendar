@@ -21,6 +21,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
 - Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
+- Category colors are auto-assigned from a fixed palette by category index and shown both in the calendar and as dots in the category manager.
 
 ## Domain Model
 
@@ -75,5 +76,6 @@ FullCalendar renders Activities as timed events in a day/week view. Each Activit
 - `duration`: activity duration in minutes, defaulting to 30
 - `title`: description (+ total cost if present)
 - `extendedProps`: `{ activity, date }`
+- `backgroundColor`: category palette color when the activity has a matching category
 
 The detail calendar now also supports an Itinerary view that defaults on open and spans the full budget date range with a custom `timeGrid` duration.

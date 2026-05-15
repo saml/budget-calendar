@@ -3,7 +3,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useEffect, useState } from 'react'
 import type { Activity, Budget } from '../../types'
-import { budgetDurationDays, toCalendarEvent } from '../../utils/dateUtils'
+import { budgetDurationDays, getCategoryColor, toCalendarEvent } from '../../utils/dateUtils'
 import { ActivityForm } from '../Activity/ActivityForm'
 import { useBudgetStore } from '../../store/budgetStore'
 
@@ -97,7 +97,10 @@ export function CalendarView({ budget }: CalendarViewProps) {
         }}
         datesSet={(info) => setCurrentView(info.view.type)}
         events={budget.days.flatMap((day) =>
-          day.activities.map((activity) => toCalendarEvent(activity, day.date)),
+          day.activities.map((activity) => {
+            const color = getCategoryColor(budget.categories, activity.categoryId)
+            return toCalendarEvent(activity, day.date, color)
+          }),
         )}
         dateClick={(clickInfo) =>
           setModalState({

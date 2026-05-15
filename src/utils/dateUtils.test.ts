@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { budgetDurationDays, generateDays, toCalendarEvent } from './dateUtils'
+import {
+  budgetDurationDays,
+  CATEGORY_COLORS,
+  generateDays,
+  getCategoryColor,
+  toCalendarEvent,
+} from './dateUtils'
 
 describe('dateUtils', () => {
   it('generates days for an inclusive date range', () => {
@@ -104,6 +110,19 @@ describe('dateUtils', () => {
       duration: { minutes: 45 },
     })
   })
+
+  it('includes backgroundColor when provided', () => {
+    const activity = { id: 'a1', time: '09:00', description: 'Hotel' }
+    expect(toCalendarEvent(activity, '2025-01-01', '#e06c4a')).toMatchObject({
+      backgroundColor: '#e06c4a',
+    })
+  })
+
+  it('does not include backgroundColor when not provided', () => {
+    const activity = { id: 'a1', time: '09:00', description: 'Hotel' }
+    const event = toCalendarEvent(activity, '2025-01-01')
+    expect(event).not.toHaveProperty('backgroundColor')
+  })
 })
 
 describe('budgetDurationDays', () => {
@@ -113,5 +132,38 @@ describe('budgetDurationDays', () => {
 
   it('returns 10 for a 10-day budget', () => {
     expect(budgetDurationDays('2025-01-01', '2025-01-10')).toBe(10)
+  })
+})
+
+describe('getCategoryColor', () => {
+  const categories = [
+    { id: 'cat-1', name: 'Food' },
+    { id: 'cat-2', name: 'Transit' },
+  ]
+
+  it('returns the first palette color for the first category', () => {
+    expect(getCategoryColor(categories, 'cat-1')).toBe(CATEGORY_COLORS[0])
+  })
+
+  it('returns the second palette color for the second category', () => {
+    expect(getCategoryColor(categories, 'cat-2')).toBe(CATEGORY_COLORS[1])
+  })
+
+  it('returns undefined when categoryId is undefined', () => {
+    expect(getCategoryColor(categories, undefined)).toBeUndefined()
+  })
+
+  it('returns undefined when categoryId does not match any category', () => {
+    expect(getCategoryColor(categories, 'unknown')).toBeUndefined()
+  })
+
+  it('wraps around the palette when categories exceed palette length', () => {
+    const manyCategories = Array.from({ length: CATEGORY_COLORS.length + 1 }, (_, i) => ({
+      id: `cat-${i}`,
+      name: `Cat ${i}`,
+    }))
+    expect(getCategoryColor(manyCategories, `cat-${CATEGORY_COLORS.length}`)).toBe(
+      CATEGORY_COLORS[0],
+    )
   })
 })
