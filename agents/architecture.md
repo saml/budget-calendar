@@ -23,7 +23,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Routing: local `useState` in `App.tsx`
 - Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
 - Category colors are auto-assigned from a fixed palette by category index and shown both in the calendar and as dots in the category manager.
-- Table view: read-only activity table flattens budget days into rows and sorts client-side by date or category.
+- Table view: styled activity table flattens budget days into rows, sorts client-side by date or category, and supports inline edits for category, description, count, and cost while keeping datetime and total price read-only.
 - Import/export helpers parse single-budget JSON, ignore extra fields, and remap imported IDs so budgets never overwrite existing ones.
 
 ## Domain Model
