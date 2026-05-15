@@ -56,16 +56,29 @@ function deriveGroups(budget: Budget): ActivityGroup[] {
     })
     .map((group) => ({
       ...group,
-      rows: group.rows.sort((left, right) => {
-        const dateComparison = left.date.localeCompare(right.date)
-        if (dateComparison !== 0) return dateComparison
-
-        const timeComparison = left.activity.time.localeCompare(right.activity.time)
-        if (timeComparison !== 0) return timeComparison
-
-        return left.activity.id.localeCompare(right.activity.id)
-      }),
+      rows: group.rows.sort(compareRows),
     }))
+}
+
+function deriveRows(budget: Budget): ActivityTableRow[] {
+  return budget.days
+    .flatMap((day) =>
+      day.activities.map((activity) => {
+        const category = budget.categories.find((item) => item.id === activity.categoryId)
+        return { date: day.date, activity, categoryName: category?.name }
+      }),
+    )
+    .sort(compareRows)
+}
+
+function compareRows(left: ActivityTableRow, right: ActivityTableRow) {
+  const dateComparison = left.date.localeCompare(right.date)
+  if (dateComparison !== 0) return dateComparison
+
+  const timeComparison = left.activity.time.localeCompare(right.activity.time)
+  if (timeComparison !== 0) return timeComparison
+
+  return left.activity.id.localeCompare(right.activity.id)
 }
 
 function formatTotalPrice(activity: Activity): string {
@@ -274,14 +287,29 @@ function GroupSubtotalRow({ categoryName, subtotal }: { categoryName: string; su
 }
 
 export function ActivityTable({ budget }: Props) {
+  const [mode, setMode] = useState<'grouped' | 'flat'>('grouped')
   const groups = deriveGroups(budget)
+  const rows = deriveRows(budget)
 
-  if (groups.length === 0) {
+  if (mode === 'grouped' && groups.length === 0) {
+    return <div className="p-4 text-sm text-neutral-500">No activities yet</div>
+  }
+
+  if (mode === 'flat' && rows.length === 0) {
     return <div className="p-4 text-sm text-neutral-500">No activities yet</div>
   }
 
   return (
     <div className="overflow-x-auto p-4">
+      <div className="flex justify-end px-4 pt-4">
+        <button
+          type="button"
+          onClick={() => setMode(mode === 'grouped' ? 'flat' : 'grouped')}
+          className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+        >
+          {mode === 'grouped' ? 'Sort by datetime' : 'Group by category'}
+        </button>
+      </div>
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr>
@@ -303,22 +331,29 @@ export function ActivityTable({ budget }: Props) {
             <th className="border border-neutral-300 bg-neutral-50 px-3 py-2 text-left font-semibold dark:border-neutral-700 dark:bg-neutral-800">
               Total Price
             </th>
-            </tr>
+          </tr>
           </thead>
           <tbody>
-          {groups.flatMap((group) => [
-            <GroupHeaderRow key={`${group.categoryId ?? 'uncategorized'}-header`} categoryName={group.categoryName} />,
-            ...group.rows.map((row) => (
-              <ActivityRow key={`${row.date}-${row.activity.id}`} budget={budget} row={row} />
-            )),
-            <GroupSubtotalRow
-              key={`${group.categoryId ?? 'uncategorized'}-subtotal`}
-              categoryName={group.categoryName}
-              subtotal={group.subtotal}
-            />,
-          ])}
-        </tbody>
-      </table>
-    </div>
-  )
+            {mode === 'grouped'
+              ? groups.flatMap((group) => [
+                  <GroupHeaderRow
+                    key={`${group.categoryId ?? 'uncategorized'}-header`}
+                    categoryName={group.categoryName}
+                  />,
+                  ...group.rows.map((row) => (
+                    <ActivityRow key={`${row.date}-${row.activity.id}`} budget={budget} row={row} />
+                  )),
+                  <GroupSubtotalRow
+                    key={`${group.categoryId ?? 'uncategorized'}-subtotal`}
+                    categoryName={group.categoryName}
+                    subtotal={group.subtotal}
+                  />,
+                ])
+              : rows.map((row) => (
+                  <ActivityRow key={`${row.date}-${row.activity.id}`} budget={budget} row={row} />
+                ))}
+          </tbody>
+        </table>
+      </div>
+    )
 }

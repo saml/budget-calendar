@@ -85,7 +85,8 @@ describe('ActivityTable', () => {
   it('groups activities by category with subtotals', () => {
     renderTable()
 
-    expect(screen.queryByRole('button', { name: 'Sort by category' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sort by datetime' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Group by category' })).not.toBeInTheDocument()
 
     const rows = screen.getAllByRole('row')
     expect(rows[1]).toHaveTextContent('Alpha')
@@ -98,6 +99,53 @@ describe('ActivityTable', () => {
     expect(rows[8]).toHaveTextContent('Uncategorized')
     expect(rows[9]).toHaveTextContent('Coffee')
     expect(rows[10]).toHaveTextContent('Uncategorized subtotal')
+  })
+
+  it('shows a "Sort by datetime" button in grouped mode', () => {
+    renderTable()
+
+    expect(screen.getByRole('button', { name: 'Sort by datetime' })).toBeInTheDocument()
+  })
+
+  it('sorts all activities by datetime when flat mode is active', async () => {
+    const user = userEvent.setup()
+    renderTable()
+
+    await user.click(screen.getByRole('button', { name: 'Sort by datetime' }))
+
+    const rows = screen.getAllByRole('row')
+    expect(rows.slice(1).every((row) => within(row).queryAllByRole('columnheader').length === 0)).toBe(
+      true,
+    )
+    expect(
+      rows.filter((row) => within(row).queryByText(/2025-/)).map((row) =>
+        within(row).getByText(/2025-/).textContent,
+      ),
+    ).toEqual([
+      '2025-06-01 08:00',
+      '2025-06-01 14:00',
+      '2025-06-02 09:00',
+      '2025-06-03 10:00',
+    ])
+  })
+
+  it('shows only activity rows in flat mode', async () => {
+    const user = userEvent.setup()
+    renderTable()
+
+    await user.click(screen.getByRole('button', { name: 'Sort by datetime' }))
+
+    expect(screen.getAllByRole('row')).toHaveLength(5)
+  })
+
+  it('returns to grouped mode when "Group by category" is clicked', async () => {
+    const user = userEvent.setup()
+    renderTable()
+
+    await user.click(screen.getByRole('button', { name: 'Sort by datetime' }))
+    await user.click(screen.getByRole('button', { name: 'Group by category' }))
+
+    expect(screen.getAllByRole('row')).toHaveLength(11)
   })
 
   it('sorts activities by date within each category group', () => {
