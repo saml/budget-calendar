@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useBudgetStore } from '../../store/budgetStore'
 import { CalendarView } from '../Calendar/CalendarView'
+import { ActivityTable } from '../ActivityTable/ActivityTable'
 import { CategoryManager } from '../Category/CategoryManager'
 import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
 
@@ -14,6 +15,7 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
     state.budgets.find((item) => item.id === budgetId),
   )
   const setActiveBudget = useBudgetStore((state) => state.setActiveBudget)
+  const [viewMode, setViewMode] = useState<'calendar' | 'table'>('calendar')
 
   useEffect(() => {
     setActiveBudget(budgetId)
@@ -41,10 +43,26 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
             {formatNumber(calcTotalCost(budget))}
           </p>
           <CategoryManager />
+          <div className="mt-2 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setViewMode('calendar')}
+              aria-pressed={viewMode === 'calendar'}
+            >
+              Calendar
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              aria-pressed={viewMode === 'table'}
+            >
+              Table
+            </button>
+          </div>
         </div>
       </header>
       <div className="flex-1 overflow-auto">
-        <CalendarView budget={budget} />
+        {viewMode === 'calendar' ? <CalendarView budget={budget} /> : <ActivityTable budget={budget} />}
       </div>
     </main>
   )

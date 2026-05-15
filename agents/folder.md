@@ -33,8 +33,11 @@ budget-calendar/
         ├── BudgetList/      ← Budget list page + create form
         │   ├── BudgetList.tsx
         │   └── BudgetForm.tsx
-        ├── BudgetDetail/    ← Calendar page header + layout
+        ├── BudgetDetail/    ← Calendar/table detail page header + layout
         │   └── BudgetDetail.tsx
+        ├── ActivityTable/   ← Read-only activity table view
+        │   ├── ActivityTable.tsx
+        │   └── ActivityTable.test.tsx
         ├── Calendar/        ← FullCalendar wrapper
         │   └── CalendarView.tsx
         ├── Activity/        ← Add/edit Activity modal form

@@ -45,6 +45,32 @@ describe('BudgetDetail', () => {
     ).toBeInTheDocument()
   })
 
+  it('renders calendar and table view toggle buttons', () => {
+    useBudgetStore.setState({ budgets: [budget] })
+
+    render(<BudgetDetail budgetId={budget.id} onBack={vi.fn()} />)
+
+    expect(screen.getByRole('button', { name: 'Calendar' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Table' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('switches between calendar and table views', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup()
+    useBudgetStore.setState({ budgets: [budget] })
+
+    render(<BudgetDetail budgetId={budget.id} onBack={vi.fn()} />)
+
+    expect(screen.queryByRole('button', { name: 'Sort by date' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Table' }))
+
+    expect(screen.getByRole('button', { name: 'Sort by date' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Calendar' }))
+
+    expect(screen.queryByRole('button', { name: 'Sort by date' })).not.toBeInTheDocument()
+  })
+
   it('calls back when the back button is clicked', async () => {
     const user = (await import('@testing-library/user-event')).default.setup()
     useBudgetStore.setState({ budgets: [budget] })

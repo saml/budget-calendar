@@ -15,13 +15,14 @@ No backend. Single-user. All data is stored in `localStorage`.
 ## Implemented app shape
 
 - Landing view: budget list + create/delete
-- Detail view: styled budget header + collapsible category manager + FullCalendar week/day view
+- Detail view: styled budget header + collapsible category manager + calendar/table toggle
 - Budget list: shows per-budget total cost alongside dates
 - Budget detail: shows total cost in the header subtitle
 - Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
 - Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
 - Category colors are auto-assigned from a fixed palette by category index and shown both in the calendar and as dots in the category manager.
+- Table view: read-only activity table flattens budget days into rows and sorts client-side by date or category.
 
 ## Domain Model
 
