@@ -1,6 +1,8 @@
 import { BudgetForm } from './BudgetForm'
+import { ImportButton } from './ImportButton'
 import { useBudgetStore } from '../../store/budgetStore'
 import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
+import { exportBudget } from '../../utils/importExport'
 
 type BudgetListProps = {
   onOpen: (id: string) => void
@@ -15,6 +17,9 @@ export function BudgetList({ onOpen }: BudgetListProps) {
     <main className="mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-2xl font-semibold">Budgets</h1>
       <BudgetForm />
+      <div className="mt-4">
+        <ImportButton />
+      </div>
       <table className="mt-6 w-full border-collapse text-sm">
         <thead>
           <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-700">
@@ -45,6 +50,13 @@ export function BudgetList({ onOpen }: BudgetListProps) {
                   {formatNumber(calcTotalCost(budget))}
                 </td>
                 <td className="flex justify-end gap-2 py-3">
+                  <button
+                    type="button"
+                    onClick={() => exportBudget(budget)}
+                    className="rounded border border-neutral-300 px-3 py-1 text-sm hover:bg-neutral-100 dark:border-neutral-600 dark:hover:bg-neutral-800"
+                  >
+                    Export
+                  </button>
                   <button
                     type="button"
                     onClick={() => {

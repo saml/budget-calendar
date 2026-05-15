@@ -28,11 +28,13 @@ budget-calendar/
     │   └── budgetStore.ts   ← Zustand store with persist middleware
     ├── utils/
     │   ├── dateUtils.ts     ← generateDays, toCalendarEvent
-    │   └── budgetUtils.ts   ← calcTotalCost, formatNumber
+    │   ├── budgetUtils.ts   ← calcTotalCost, formatNumber
+    │   └── importExport.ts  ← slugify, parseBudget, exportBudget
     └── components/
         ├── BudgetList/      ← Budget list page + create form
         │   ├── BudgetList.tsx
-        │   └── BudgetForm.tsx
+        │   ├── BudgetForm.tsx
+        │   └── ImportButton.tsx
         ├── BudgetDetail/    ← Calendar/table detail page header + layout
         │   └── BudgetDetail.tsx
         ├── ActivityTable/   ← Read-only activity table view

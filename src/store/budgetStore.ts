@@ -7,6 +7,7 @@ type BudgetStore = {
   budgets: Budget[]
   activeBudgetId: string | null
   addBudget: (budget: Omit<Budget, 'id' | 'days' | 'categories'>) => void
+  importBudget: (budget: Budget) => void
   deleteBudget: (id: string) => void
   setActiveBudget: (id: string | null) => void
   addActivity: (date: string, activity: Omit<Activity, 'id'>) => void
@@ -48,6 +49,35 @@ export const useBudgetStore = create<BudgetStore>()(
             },
           ],
         })),
+      importBudget: (budget) =>
+        set((state) => {
+          const idMap: Record<string, string> = {}
+          const categories = budget.categories.map((category) => {
+            const id = randomId()
+            idMap[category.id] = id
+            return { ...category, id }
+          })
+          const days = budget.days.map((day) => ({
+            ...day,
+            activities: day.activities.map((activity) => ({
+              ...activity,
+              id: randomId(),
+              categoryId: activity.categoryId ? idMap[activity.categoryId] : undefined,
+            })),
+          }))
+
+          return {
+            budgets: [
+              ...state.budgets,
+              {
+                ...budget,
+                id: randomId(),
+                categories,
+                days,
+              },
+            ],
+          }
+        }),
       deleteBudget: (id) =>
         set((state) => ({
           budgets: state.budgets.filter((budget) => budget.id !== id),

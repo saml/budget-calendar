@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useBudgetStore } from './budgetStore'
+import type { Budget } from '../types'
 
 beforeEach(() => {
   localStorage.clear()
@@ -222,5 +223,57 @@ describe('useBudgetStore', () => {
       'budget-calendar:budgets',
       expect.any(String),
     )
+  })
+
+  it('adds imported budget with fresh IDs', () => {
+    const budget: Budget = {
+      id: 'old-id',
+      name: 'Paris',
+      startDate: '2026-06-01',
+      endDate: '2026-06-05',
+      categories: [{ id: 'old-cat', name: 'Food' }],
+      days: [
+        {
+          date: '2026-06-01',
+          activities: [
+            {
+              id: 'old-act',
+              time: '09:00',
+              description: 'Breakfast',
+              categoryId: 'old-cat',
+            },
+          ],
+        },
+      ],
+    }
+
+    act(() => {
+      useBudgetStore.getState().importBudget(budget)
+    })
+
+    const imported = useBudgetStore.getState().budgets[0]
+    const actv = imported.days[0].activities[0]
+
+    expect(imported.id).not.toBe('old-id')
+    expect(imported.categories[0].id).not.toBe('old-cat')
+    expect(actv.id).not.toBe('old-act')
+    expect(actv.categoryId).toBe(imported.categories[0].id)
+  })
+
+  it('handles budget with no categories or activities', () => {
+    const budget: Budget = {
+      id: 'x',
+      name: 'Empty',
+      startDate: '2026-01-01',
+      endDate: '2026-01-01',
+      categories: [],
+      days: [{ date: '2026-01-01', activities: [] }],
+    }
+
+    act(() => {
+      useBudgetStore.getState().importBudget(budget)
+    })
+
+    expect(useBudgetStore.getState().budgets).toHaveLength(1)
   })
 })
