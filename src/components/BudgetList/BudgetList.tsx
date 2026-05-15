@@ -3,6 +3,7 @@ import { ImportButton } from './ImportButton'
 import { useBudgetStore } from '../../store/budgetStore'
 import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
 import { exportBudget } from '../../utils/importExport'
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 
 type BudgetListProps = {
   onOpen: (id: string) => void
@@ -15,7 +16,10 @@ export function BudgetList({ onOpen }: BudgetListProps) {
 
   return (
     <main className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-2xl font-semibold">Budgets</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Budgets</h1>
+        <ThemeToggle />
+      </div>
       <BudgetForm />
       <div className="mt-4">
         <ImportButton />

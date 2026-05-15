@@ -4,6 +4,7 @@ import { CalendarView } from '../Calendar/CalendarView'
 import { ActivityTable } from '../ActivityTable/ActivityTable'
 import { CategoryManager } from '../Category/CategoryManager'
 import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 
 type BudgetDetailProps = {
   budgetId: string
@@ -59,6 +60,9 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
               Table
             </button>
           </div>
+        </div>
+        <div className="ml-auto">
+          <ThemeToggle />
         </div>
       </header>
       <div className="flex-1 overflow-auto">

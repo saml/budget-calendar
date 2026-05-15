@@ -19,12 +19,14 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Detail view: styled budget header + collapsible category manager + calendar/table toggle
 - Budget list: shows per-budget total cost alongside dates
 - Budget detail: shows total cost in the header subtitle
+- Theme preference: separate persisted Zustand store with Light/Dark/System toggle
 - Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
 - Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
 - Category colors are auto-assigned from a fixed palette by category index and shown both in the calendar and as dots in the category manager.
 - Table view: styled activity table flattens budget days into rows, sorts client-side by date or category, and supports inline edits for category, description, count, and cost while keeping datetime and total price read-only.
 - Import/export helpers parse single-budget JSON, ignore extra fields, and remap imported IDs so budgets never overwrite existing ones.
+- App syncs the theme store with the root `dark` class and system color-scheme changes.
 
 ## Domain Model
 
@@ -71,6 +73,7 @@ type Activity = {
 All Budgets are stored as a JSON array under the key `budget-calendar:budgets` in `localStorage`.
 
 Zustand persists only `budgets`; `activeBudgetId` stays in memory.
+Theme preference is stored separately under `budget-calendar:theme`.
 
 ## Calendar View
 
