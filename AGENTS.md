@@ -24,3 +24,7 @@ See `agents/build.md` and `agents/test.md`.
 # Folder structure
 
 See `agents/folder.md`.
+
+# Current interactions
+
+- Calendar detail supports click-to-create with pre-filled time, drag/drop move + resize, and Cmd/Ctrl click selection with copy/paste via local UI state.

@@ -6,6 +6,7 @@ type ActivityFormProps = {
   budget: Budget
   date: string
   activity?: Activity
+  initialValues?: Partial<Omit<Activity, 'id'>>
   onClose: () => void
 }
 
@@ -13,20 +14,31 @@ export function ActivityForm({
   budget,
   date,
   activity,
+  initialValues,
   onClose,
 }: ActivityFormProps) {
   const addActivity = useBudgetStore((state) => state.addActivity)
   const updateActivity = useBudgetStore((state) => state.updateActivity)
   const deleteActivity = useBudgetStore((state) => state.deleteActivity)
 
-  const [time, setTime] = useState(activity?.time ?? '')
-  const [description, setDescription] = useState(activity?.description ?? '')
-  const [cost, setCost] = useState(
-    activity?.cost === undefined ? '' : String(activity.cost),
+  const [time, setTime] = useState(activity?.time ?? initialValues?.time ?? '')
+  const [description, setDescription] = useState(
+    activity?.description ?? initialValues?.description ?? '',
   )
-  const [duration, setDuration] = useState(activity?.duration ?? 30)
-  const [count, setCount] = useState(activity?.count ?? 1)
-  const [categoryId, setCategoryId] = useState(activity?.categoryId ?? '')
+  const [cost, setCost] = useState(
+    activity?.cost !== undefined
+      ? String(activity.cost)
+      : initialValues?.cost !== undefined
+        ? String(initialValues.cost)
+        : '',
+  )
+  const [duration, setDuration] = useState(
+    activity?.duration ?? initialValues?.duration ?? 30,
+  )
+  const [count, setCount] = useState(activity?.count ?? initialValues?.count ?? 1)
+  const [categoryId, setCategoryId] = useState(
+    activity?.categoryId ?? initialValues?.categoryId ?? '',
+  )
 
   const isEditMode = Boolean(activity)
 

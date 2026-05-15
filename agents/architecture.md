@@ -18,6 +18,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Detail view: styled budget header + collapsible category manager + FullCalendar week/day view
 - Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
+- Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
 
 ## Domain Model
 

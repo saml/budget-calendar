@@ -57,6 +57,59 @@ describe('ActivityForm', () => {
     expect(screen.getByLabelText('Category')).toHaveValue('cat-1')
   })
 
+  it('pre-fills time from initialValues when no activity prop', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        initialValues={{ time: '14:30' }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Time')).toHaveValue('14:30')
+  })
+
+  it('pre-fills all fields from initialValues for copy-paste', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        initialValues={{
+          time: '09:00',
+          description: 'Breakfast',
+          cost: 14,
+          count: 2,
+          duration: 45,
+          categoryId: 'cat-1',
+        }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Time')).toHaveValue('09:00')
+    expect(screen.getByLabelText('Description')).toHaveValue('Breakfast')
+    expect(screen.getByLabelText('Cost')).toHaveValue(14)
+    expect(screen.getByLabelText('Duration')).toHaveValue(45)
+    expect(screen.getByLabelText('Count')).toHaveValue(2)
+    expect(screen.getByLabelText('Category')).toHaveValue('cat-1')
+  })
+
+  it('initialValues is ignored when activity prop is present (edit mode)', () => {
+    render(
+      <ActivityForm
+        budget={budget}
+        date="2025-08-01"
+        activity={{ id: 'a1', time: '09:00', description: 'Existing' }}
+        initialValues={{ time: '14:00', description: 'Should be ignored' }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(screen.getByLabelText('Time')).toHaveValue('09:00')
+    expect(screen.getByLabelText('Description')).toHaveValue('Existing')
+  })
+
   it('renders a duration field for edit mode values', () => {
     render(
       <ActivityForm

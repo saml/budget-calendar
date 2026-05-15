@@ -11,6 +11,7 @@ type BudgetStore = {
   setActiveBudget: (id: string | null) => void
   addActivity: (date: string, activity: Omit<Activity, 'id'>) => void
   updateActivity: (date: string, activity: Activity) => void
+  moveActivity: (fromDate: string, toDate: string, activity: Activity) => void
   deleteActivity: (date: string, activityId: string) => void
   addCategory: (name: string) => void
   deleteCategory: (id: string) => void
@@ -92,6 +93,41 @@ export const useBudgetStore = create<BudgetStore>()(
                     }
                   : day,
               ),
+            }),
+          ),
+        })),
+      moveActivity: (fromDate, toDate, activity) =>
+        set((state) => ({
+          budgets: updateActiveBudget(
+            state.budgets,
+            state.activeBudgetId,
+            (budget) => ({
+              ...budget,
+              days: budget.days.map((day) => {
+                if (day.date === fromDate && day.date === toDate) {
+                  return {
+                    ...day,
+                    activities: day.activities.map((existing) =>
+                      existing.id === activity.id ? activity : existing,
+                    ),
+                  }
+                }
+                if (day.date === fromDate) {
+                  return {
+                    ...day,
+                    activities: day.activities.filter(
+                      (existing) => existing.id !== activity.id,
+                    ),
+                  }
+                }
+                if (day.date === toDate) {
+                  return {
+                    ...day,
+                    activities: [...day.activities, activity],
+                  }
+                }
+                return day
+              }),
             }),
           ),
         })),

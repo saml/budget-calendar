@@ -105,6 +105,85 @@ describe('useBudgetStore', () => {
     expect(result.current.budgets[0].days[0].activities).toEqual([])
   })
 
+  it('moveActivity: moves an activity to a different day with a new time', () => {
+    const { result } = renderHook(() => useBudgetStore())
+
+    act(() => {
+      result.current.addBudget({
+        name: 'Madrid',
+        startDate: '2025-03-01',
+        endDate: '2025-03-02',
+        currency: 'EUR',
+      })
+    })
+
+    const budgetId = result.current.budgets[0].id
+
+    act(() => {
+      result.current.setActiveBudget(budgetId)
+      result.current.addActivity('2025-03-01', {
+        time: '08:00',
+        description: 'Breakfast',
+      })
+    })
+
+    const activity = result.current.budgets[0].days[0].activities[0]
+
+    act(() => {
+      result.current.moveActivity('2025-03-01', '2025-03-02', {
+        ...activity,
+        time: '14:00',
+      })
+    })
+
+    expect(result.current.budgets[0].days[0].activities).toEqual([])
+    expect(result.current.budgets[0].days[1].activities).toEqual([
+      {
+        ...activity,
+        time: '14:00',
+      },
+    ])
+  })
+
+  it('moveActivity: updates time when moved within the same day', () => {
+    const { result } = renderHook(() => useBudgetStore())
+
+    act(() => {
+      result.current.addBudget({
+        name: 'Madrid',
+        startDate: '2025-03-01',
+        endDate: '2025-03-01',
+        currency: 'EUR',
+      })
+    })
+
+    const budgetId = result.current.budgets[0].id
+
+    act(() => {
+      result.current.setActiveBudget(budgetId)
+      result.current.addActivity('2025-03-01', {
+        time: '08:00',
+        description: 'Breakfast',
+      })
+    })
+
+    const activity = result.current.budgets[0].days[0].activities[0]
+
+    act(() => {
+      result.current.moveActivity('2025-03-01', '2025-03-01', {
+        ...activity,
+        time: '10:00',
+      })
+    })
+
+    expect(result.current.budgets[0].days[0].activities).toEqual([
+      {
+        ...activity,
+        time: '10:00',
+      },
+    ])
+  })
+
   it('adds and deletes categories on the active budget', () => {
     const { result } = renderHook(() => useBudgetStore())
 
