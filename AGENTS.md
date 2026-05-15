@@ -31,5 +31,6 @@ See `agents/folder.md`.
 - Activities inherit calendar colors from their budget category index; uncategorized activities keep FullCalendar's default blue.
 - Budget detail now has calendar, table, and analytics tabs. The table view groups activities by category with subtotals, and the analytics view shows a pie-chart cost breakdown using the category palette.
 - Budget list now supports JSON export per row and single-budget JSON import beside the create form. Imported budgets are remapped to fresh IDs.
+- First visit seeds a bundled sample budget from `example/example.json` once via `src/seed.ts`, guarded by `budget-calendar:seeded` in localStorage.
 - Theme preference is a separate persisted Zustand store with a 3-way Light/Dark/System toggle, and App owns the document-level `dark` class sync.
 - GitHub Pages deployment uses Vite `base: '/budget-calendar/'` and a GitHub Actions workflow that publishes `dist/` to the `gh-pages` branch from `master`.

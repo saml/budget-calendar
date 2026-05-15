@@ -27,6 +27,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 - Table view: styled activity table groups activities by category with subtotal rows, sorts within each group by date/time, and supports inline edits for category, description, count, and cost while keeping datetime and total price read-only.
 - Analytics view: pie chart + legend built from a reusable category summary helper, with category colors matching the calendar palette and uncategorized activities shown in neutral gray.
 - Import/export helpers parse single-budget JSON, ignore extra fields, and remap imported IDs so budgets never overwrite existing ones.
+- App seeds a bundled sample budget once on first visit from `example/example.json` before React mounts, using `budget-calendar:seeded` to avoid reseeding returning users.
 - App syncs the theme store with the root `dark` class and system color-scheme changes.
 - GitHub Pages deployment is static: Vite builds under `/budget-calendar/` and GitHub Actions publishes `dist/` to `gh-pages` on pushes to `master`.
 

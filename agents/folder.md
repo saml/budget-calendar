@@ -14,6 +14,8 @@ budget-calendar/
 │   ├── test.md
 │   └── folder.md
 ├── index.html
+├── example/
+│   └── example.json    ← bundled sample budget used to seed first visits
 ├── vite.config.ts
 ├── tsconfig.json
 ├── tsconfig.app.json
