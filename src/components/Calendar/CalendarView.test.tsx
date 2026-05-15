@@ -8,7 +8,6 @@ const budget: Budget = {
   name: 'Trip',
   startDate: '2025-09-01',
   endDate: '2025-09-10',
-  currency: 'USD',
   categories: [],
   days: [],
 }

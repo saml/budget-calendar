@@ -23,7 +23,6 @@ export type Budget = {
   name: string
   startDate: string
   endDate: string
-  currency: string
   categories: Category[]
   days: Day[]
 }

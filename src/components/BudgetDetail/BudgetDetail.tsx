@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useBudgetStore } from '../../store/budgetStore'
 import { CalendarView } from '../Calendar/CalendarView'
 import { CategoryManager } from '../Category/CategoryManager'
+import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
 
 type BudgetDetailProps = {
   budgetId: string
@@ -36,7 +37,8 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
         <div className="flex-1">
           <h1 className="text-xl font-semibold">{budget.name}</h1>
           <p className="text-sm text-neutral-500">
-          {budget.startDate} → {budget.endDate} · {budget.currency}
+            {budget.startDate} → {budget.endDate} ·{' '}
+            {formatNumber(calcTotalCost(budget))}
           </p>
           <CategoryManager />
         </div>

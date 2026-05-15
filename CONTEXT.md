@@ -5,7 +5,7 @@ A single-user web app for planning travel itineraries with associated costs, ren
 ## Language
 
 **Budget**:
-A named financial and scheduling envelope covering a contiguous date range, denominated in a single currency, with a user-defined set of categories.
+A named financial and scheduling envelope covering a contiguous date range, with a user-defined set of categories.
 _Avoid_: Trip, journey, plan, itinerary (itinerary is the *view*, not the entity)
 
 **Day**:
@@ -19,6 +19,10 @@ _Avoid_: Expense, entry, event, line item
 **Category**:
 A user-defined label scoped to a single Budget, used to classify Activities (e.g., transportation, food, hotel).
 _Avoid_: Tag, type, kind
+
+**Total Cost**:
+The sum of all Activity prices (`cost × count`) within a Budget, across all Days. Activities without a cost contribute zero. Formatted as a locale-sensitive number using `toLocaleString()`. Displayed in both the BudgetList and the BudgetDetail header.
+_Avoid_: Total budget, total spend, total expenses
 
 ## Relationships
 

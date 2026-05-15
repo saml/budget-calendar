@@ -16,6 +16,8 @@ No backend. Single-user. All data is stored in `localStorage`.
 
 - Landing view: budget list + create/delete
 - Detail view: styled budget header + collapsible category manager + FullCalendar week/day view
+- Budget list: shows per-budget total cost alongside dates
+- Budget detail: shows total cost in the header subtitle
 - Activity editor: centered modal with backdrop for add/edit/delete
 - Routing: local `useState` in `App.tsx`
 - Calendar interactions: click-to-create pre-fills slot time, activities can be dragged/resized through FullCalendar, and copy/paste uses local clipboard state in the calendar view.
@@ -24,7 +26,7 @@ No backend. Single-user. All data is stored in `localStorage`.
 
 See [CONTEXT.md](../CONTEXT.md) for canonical terminology. Summary:
 
-- **Budget** — top-level entity. Has a name, start date, end date, single currency, and a list of user-defined Categories.
+- **Budget** — top-level entity. Has a name, start date, end date, and a list of user-defined Categories.
 - **Day** — a specific date within a Budget's date range. Contains zero or more Activities.
 - **Activity** — a time-stamped item on a Day. Has a description, a time, an optional cost (number), an optional count (positive integer), an optional duration in minutes, and an optional Category.
 - **Category** — a user-defined label scoped to one Budget (e.g., "transportation", "food", "hotel").
@@ -37,7 +39,6 @@ type Budget = {
   name: string;
   startDate: string;   // ISO date "YYYY-MM-DD"
   endDate: string;     // ISO date "YYYY-MM-DD"
-  currency: string;    // e.g. "USD"
   categories: Category[];
   days: Day[];
 };

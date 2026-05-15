@@ -1,5 +1,6 @@
 import { BudgetForm } from './BudgetForm'
 import { useBudgetStore } from '../../store/budgetStore'
+import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
 
 type BudgetListProps = {
   onOpen: (id: string) => void
@@ -19,7 +20,7 @@ export function BudgetList({ onOpen }: BudgetListProps) {
           <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-700">
             <th className="py-2 pr-4">Name</th>
             <th className="py-2 pr-4">Dates</th>
-            <th className="py-2 pr-4">Currency</th>
+            <th className="py-2 pr-4">Total Cost</th>
             <th className="py-2" />
           </tr>
         </thead>
@@ -40,7 +41,9 @@ export function BudgetList({ onOpen }: BudgetListProps) {
                 <td className="py-3 pr-4 text-neutral-500">
                   {budget.startDate} → {budget.endDate}
                 </td>
-                <td className="py-3 pr-4 text-neutral-500">{budget.currency}</td>
+                <td className="py-3 pr-4 text-neutral-500">
+                  {formatNumber(calcTotalCost(budget))}
+                </td>
                 <td className="flex justify-end gap-2 py-3">
                   <button
                     type="button"

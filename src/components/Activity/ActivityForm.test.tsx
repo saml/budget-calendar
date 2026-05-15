@@ -15,7 +15,6 @@ describe('ActivityForm', () => {
     name: 'Trip',
     startDate: '2025-08-01',
     endDate: '2025-08-03',
-    currency: 'USD',
     categories: [
       { id: 'cat-1', name: 'Food' },
       { id: 'cat-2', name: 'Transit' },

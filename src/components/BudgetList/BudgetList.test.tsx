@@ -18,7 +18,6 @@ describe('BudgetList', () => {
           name: 'Trip',
           startDate: '2025-07-01',
           endDate: '2025-07-03',
-          currency: 'USD',
           categories: [],
           days: [],
         },
@@ -29,7 +28,8 @@ describe('BudgetList', () => {
 
     expect(screen.getByText('Trip')).toBeInTheDocument()
     expect(screen.getByText('2025-07-01 → 2025-07-03')).toBeInTheDocument()
-    expect(screen.getByText('USD')).toBeInTheDocument()
+    expect(screen.getByText('0')).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Total Cost' })).toBeInTheDocument()
   })
 
   it('deletes a budget', async () => {
@@ -41,7 +41,6 @@ describe('BudgetList', () => {
           name: 'Trip',
           startDate: '2025-07-01',
           endDate: '2025-07-03',
-          currency: 'USD',
           categories: [],
           days: [],
         },
@@ -65,7 +64,6 @@ describe('BudgetList', () => {
           name: 'Trip',
           startDate: '2025-07-01',
           endDate: '2025-07-03',
-          currency: 'USD',
           categories: [],
           days: [],
         },

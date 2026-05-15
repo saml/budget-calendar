@@ -17,7 +17,6 @@ describe('useBudgetStore', () => {
         name: 'Tokyo',
         startDate: '2025-01-01',
         endDate: '2025-01-03',
-        currency: 'JPY',
       })
     })
 
@@ -26,7 +25,6 @@ describe('useBudgetStore', () => {
       name: 'Tokyo',
       startDate: '2025-01-01',
       endDate: '2025-01-03',
-      currency: 'JPY',
     })
     expect(result.current.budgets[0].days).toEqual([
       { date: '2025-01-01', activities: [] },
@@ -43,7 +41,6 @@ describe('useBudgetStore', () => {
         name: 'Paris',
         startDate: '2025-02-01',
         endDate: '2025-02-02',
-        currency: 'EUR',
       })
     })
 
@@ -64,7 +61,6 @@ describe('useBudgetStore', () => {
         name: 'Rome',
         startDate: '2025-03-01',
         endDate: '2025-03-01',
-        currency: 'EUR',
       })
     })
 
@@ -113,7 +109,6 @@ describe('useBudgetStore', () => {
         name: 'Madrid',
         startDate: '2025-03-01',
         endDate: '2025-03-02',
-        currency: 'EUR',
       })
     })
 
@@ -153,7 +148,6 @@ describe('useBudgetStore', () => {
         name: 'Madrid',
         startDate: '2025-03-01',
         endDate: '2025-03-01',
-        currency: 'EUR',
       })
     })
 
@@ -192,7 +186,6 @@ describe('useBudgetStore', () => {
         name: 'Lisbon',
         startDate: '2025-04-01',
         endDate: '2025-04-01',
-        currency: 'EUR',
       })
     })
 
@@ -222,7 +215,6 @@ describe('useBudgetStore', () => {
         name: 'Seoul',
         startDate: '2025-05-01',
         endDate: '2025-05-01',
-        currency: 'KRW',
       })
     })
 

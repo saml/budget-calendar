@@ -3,7 +3,7 @@
 Single-user travel budget calendar web app. React + Vite + TypeScript + FullCalendar + Zustand + Tailwind CSS.
 
 Domain summary:
-- Budget: date range + currency + categories + days
+- Budget: date range + categories + days
 - Day: one date in a budget
 - Activity: time-stamped item with optional cost/category
 - Category: scoped to one budget

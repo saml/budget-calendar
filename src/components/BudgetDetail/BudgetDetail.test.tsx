@@ -14,7 +14,6 @@ describe('BudgetDetail', () => {
     name: 'Trip',
     startDate: '2025-10-01',
     endDate: '2025-10-05',
-    currency: 'USD',
     categories: [],
     days: [],
   }
@@ -38,6 +37,12 @@ describe('BudgetDetail', () => {
 
     expect(screen.getByText('Trip')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '← Back' })).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        (_, element) =>
+          element?.textContent === '2025-10-01 → 2025-10-05 · 0',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('calls back when the back button is clicked', async () => {

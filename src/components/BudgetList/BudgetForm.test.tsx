@@ -16,7 +16,6 @@ describe('BudgetForm', () => {
     expect(screen.getByLabelText('Name')).toBeInTheDocument()
     expect(screen.getByLabelText('Start date')).toBeInTheDocument()
     expect(screen.getByLabelText('End date')).toBeInTheDocument()
-    expect(screen.getByLabelText('Currency')).toBeInTheDocument()
   })
 
   it('creates a budget from valid input', async () => {
@@ -27,14 +26,12 @@ describe('BudgetForm', () => {
     await user.type(screen.getByLabelText('Name'), 'Beach trip')
     await user.type(screen.getByLabelText('Start date'), '2025-06-01')
     await user.type(screen.getByLabelText('End date'), '2025-06-03')
-    await user.type(screen.getByLabelText('Currency'), 'USD')
     await user.click(screen.getByRole('button', { name: 'Create budget' }))
 
     expect(useBudgetStore.getState().budgets[0]).toMatchObject({
       name: 'Beach trip',
       startDate: '2025-06-01',
       endDate: '2025-06-03',
-      currency: 'USD',
     })
   })
 

@@ -6,7 +6,6 @@ export function BudgetForm() {
   const [name, setName] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [currency, setCurrency] = useState('')
 
   const canSubmit =
     name.trim() !== '' &&
@@ -24,12 +23,10 @@ export function BudgetForm() {
           name: name.trim(),
           startDate,
           endDate,
-          currency: currency.trim(),
         })
         setName('')
         setStartDate('')
         setEndDate('')
-        setCurrency('')
       }}
     >
       <label className="flex flex-col gap-1 text-sm">
@@ -59,15 +56,6 @@ export function BudgetForm() {
           className="w-36 rounded border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-600 dark:bg-neutral-800"
           value={endDate}
           onChange={(event) => setEndDate(event.target.value)}
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-sm">
-        Currency
-        <input
-          aria-label="Currency"
-          className="w-24 rounded border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-600 dark:bg-neutral-800"
-          value={currency}
-          onChange={(event) => setCurrency(event.target.value)}
         />
       </label>
       <button

@@ -27,7 +27,8 @@ budget-calendar/
     ├── store/
     │   └── budgetStore.ts   ← Zustand store with persist middleware
     ├── utils/
-    │   └── dateUtils.ts     ← generateDays, toCalendarEvent
+    │   ├── dateUtils.ts     ← generateDays, toCalendarEvent
+    │   └── budgetUtils.ts   ← calcTotalCost, formatNumber
     └── components/
         ├── BudgetList/      ← Budget list page + create form
         │   ├── BudgetList.tsx
