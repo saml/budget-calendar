@@ -5,6 +5,7 @@ import { ActivityTable } from '../ActivityTable/ActivityTable'
 import { CategoryManager } from '../Category/CategoryManager'
 import { calcTotalCost, formatNumber } from '../../utils/budgetUtils'
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
+import { AnalyticsView } from '../Analytics/AnalyticsView'
 
 type BudgetDetailProps = {
   budgetId: string
@@ -16,7 +17,7 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
     state.budgets.find((item) => item.id === budgetId),
   )
   const setActiveBudget = useBudgetStore((state) => state.setActiveBudget)
-  const [viewMode, setViewMode] = useState<'calendar' | 'table'>('calendar')
+  const [viewMode, setViewMode] = useState<'calendar' | 'table' | 'analytics'>('calendar')
 
   useEffect(() => {
     setActiveBudget(budgetId)
@@ -59,6 +60,13 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
             >
               Table
             </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('analytics')}
+              aria-pressed={viewMode === 'analytics'}
+            >
+              Analytics
+            </button>
           </div>
         </div>
         <div className="ml-auto">
@@ -66,7 +74,13 @@ export function BudgetDetail({ budgetId, onBack }: BudgetDetailProps) {
         </div>
       </header>
       <div className="flex-1 overflow-auto">
-        {viewMode === 'calendar' ? <CalendarView budget={budget} /> : <ActivityTable budget={budget} />}
+        {viewMode === 'calendar' ? (
+          <CalendarView budget={budget} />
+        ) : viewMode === 'table' ? (
+          <ActivityTable budget={budget} />
+        ) : (
+          <AnalyticsView budget={budget} />
+        )}
       </div>
     </main>
   )

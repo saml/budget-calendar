@@ -79,28 +79,31 @@ describe('ActivityTable', () => {
   it('renders all activities across all days as rows', () => {
     renderTable()
 
-    expect(screen.getAllByRole('row')).toHaveLength(5)
+    expect(screen.getAllByRole('row')).toHaveLength(11)
   })
 
-  it('defaults to sorting by date ascending', () => {
+  it('groups activities by category with subtotals', () => {
     renderTable()
 
-    const rows = screen.getAllByRole('row').slice(1)
-    expect(rows.map((row) => within(row).getByText(/2025-/).textContent)).toEqual([
-      '2025-06-01 08:00',
-      '2025-06-01 14:00',
-      '2025-06-02 09:00',
-      '2025-06-03 10:00',
-    ])
+    expect(screen.queryByRole('button', { name: 'Sort by category' })).not.toBeInTheDocument()
+
+    const rows = screen.getAllByRole('row')
+    expect(rows[1]).toHaveTextContent('Alpha')
+    expect(rows[2]).toHaveTextContent('Museum')
+    expect(rows[3]).toHaveTextContent('Alpha subtotal')
+    expect(rows[4]).toHaveTextContent('Beta')
+    expect(rows[5]).toHaveTextContent('Breakfast')
+    expect(rows[6]).toHaveTextContent('Zoo')
+    expect(rows[7]).toHaveTextContent('Beta subtotal')
+    expect(rows[8]).toHaveTextContent('Uncategorized')
+    expect(rows[9]).toHaveTextContent('Coffee')
+    expect(rows[10]).toHaveTextContent('Uncategorized subtotal')
   })
 
-  it('resorts rows by category name with uncategorized last', async () => {
-    const user = userEvent.setup()
+  it('sorts activities by date within each category group', () => {
     renderTable()
 
-    await user.click(screen.getByRole('button', { name: 'Sort by category' }))
-
-    const rows = screen.getAllByRole('row').slice(1)
+    const rows = screen.getAllByRole('row').filter((row) => within(row).queryByText(/2025-/))
     expect(rows.map((row) => within(row).getByText(/2025-/).textContent)).toEqual([
       '2025-06-01 14:00',
       '2025-06-02 09:00',

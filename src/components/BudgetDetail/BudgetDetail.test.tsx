@@ -18,6 +18,25 @@ describe('BudgetDetail', () => {
     days: [],
   }
 
+  const budgetWithActivity = {
+    ...budget,
+    days: [
+      {
+        date: '2025-10-01',
+        activities: [
+          {
+            id: 'activity-1',
+            time: '09:00',
+            description: 'Breakfast',
+            cost: 10,
+            categoryId: 'cat-alpha',
+          },
+        ],
+      },
+    ],
+    categories: [{ id: 'cat-alpha', name: 'Alpha' }],
+  }
+
   it('sets the active budget on mount and clears it on unmount', () => {
     useBudgetStore.setState({ budgets: [budget] })
     const { unmount } = render(<BudgetDetail budgetId={budget.id} onBack={vi.fn()} />)
@@ -45,30 +64,31 @@ describe('BudgetDetail', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders calendar and table view toggle buttons', () => {
+  it('renders calendar, table, and analytics view toggle buttons', () => {
     useBudgetStore.setState({ budgets: [budget] })
 
     render(<BudgetDetail budgetId={budget.id} onBack={vi.fn()} />)
 
     expect(screen.getByRole('button', { name: 'Calendar' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'Table' })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('button', { name: 'Analytics' })).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('switches between calendar and table views', async () => {
+  it('switches between calendar, table, and analytics views', async () => {
     const user = (await import('@testing-library/user-event')).default.setup()
-    useBudgetStore.setState({ budgets: [budget] })
+    useBudgetStore.setState({ budgets: [budgetWithActivity] })
 
-    render(<BudgetDetail budgetId={budget.id} onBack={vi.fn()} />)
-
-    expect(screen.queryByRole('button', { name: 'Sort by date' })).not.toBeInTheDocument()
+    render(<BudgetDetail budgetId={budgetWithActivity.id} onBack={vi.fn()} />)
 
     await user.click(screen.getByRole('button', { name: 'Table' }))
 
-    expect(screen.getByRole('button', { name: 'Sort by date' })).toBeInTheDocument()
+    expect(screen.getAllByText('Alpha').length).toBeGreaterThan(0)
+    expect(screen.getByText('Alpha subtotal')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Calendar' }))
+    await user.click(screen.getByRole('button', { name: 'Analytics' }))
 
-    expect(screen.queryByRole('button', { name: 'Sort by date' })).not.toBeInTheDocument()
+    expect(screen.getAllByText('Alpha').length).toBeGreaterThan(0)
+    expect(screen.getByText('100.0%')).toBeInTheDocument()
   })
 
   it('calls back when the back button is clicked', async () => {

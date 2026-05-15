@@ -4,48 +4,68 @@ import type { Activity, Budget } from '../../types'
 import { useBudgetStore } from '../../store/budgetStore'
 import { formatNumber } from '../../utils/budgetUtils'
 
-type SortBy = 'date' | 'category'
-
 type ActivityTableRow = {
   date: string
   activity: Activity
   categoryName?: string
 }
 
+type ActivityGroup = {
+  categoryId?: string
+  categoryName: string
+  rows: ActivityTableRow[]
+  subtotal: number
+}
+
 type Props = {
   budget: Budget
 }
 
-function deriveRows(budget: Budget, sortBy: SortBy): ActivityTableRow[] {
-  const rows = budget.days.flatMap((day) =>
-    day.activities.map((activity) => ({
-      date: day.date,
-      activity,
-      categoryName: budget.categories.find((category) => category.id === activity.categoryId)?.name,
-    })),
-  )
+function deriveGroups(budget: Budget): ActivityGroup[] {
+  const groups = new Map<string, ActivityGroup>()
 
-  return rows.sort((left, right) => {
-    if (sortBy === 'category') {
-      const leftUncategorized = !left.categoryName
-      const rightUncategorized = !right.categoryName
-
-      if (leftUncategorized !== rightUncategorized) {
-        return leftUncategorized ? 1 : -1
+  for (const day of budget.days) {
+    for (const activity of day.activities) {
+      const category = budget.categories.find((item) => item.id === activity.categoryId)
+      const key = category?.id ?? 'uncategorized'
+      const current = groups.get(key) ?? {
+        categoryId: category?.id,
+        categoryName: category?.name ?? 'Uncategorized',
+        rows: [],
+        subtotal: 0,
       }
 
-      const categoryComparison = (left.categoryName ?? '').localeCompare(right.categoryName ?? '')
-      if (categoryComparison !== 0) return categoryComparison
+      current.rows.push({
+        date: day.date,
+        activity,
+        categoryName: category?.name,
+      })
+      if (activity.cost !== undefined) {
+        current.subtotal += activity.cost * (activity.count ?? 1)
+      }
+
+      groups.set(key, current)
     }
+  }
 
-    const dateComparison = left.date.localeCompare(right.date)
-    if (dateComparison !== 0) return dateComparison
+  return Array.from(groups.values())
+    .sort((left, right) => {
+      if (left.categoryId === undefined) return 1
+      if (right.categoryId === undefined) return -1
+      return left.categoryName.localeCompare(right.categoryName)
+    })
+    .map((group) => ({
+      ...group,
+      rows: group.rows.sort((left, right) => {
+        const dateComparison = left.date.localeCompare(right.date)
+        if (dateComparison !== 0) return dateComparison
 
-    const timeComparison = left.activity.time.localeCompare(right.activity.time)
-    if (timeComparison !== 0) return timeComparison
+        const timeComparison = left.activity.time.localeCompare(right.activity.time)
+        if (timeComparison !== 0) return timeComparison
 
-    return left.activity.id.localeCompare(right.activity.id)
-  })
+        return left.activity.id.localeCompare(right.activity.id)
+      }),
+    }))
 }
 
 function formatTotalPrice(activity: Activity): string {
@@ -68,33 +88,6 @@ function EditableCell({ display, onActivate, editing, children }: EditableCellPr
     >
       {editing ? children : display}
     </td>
-  )
-}
-
-function SortControls({
-  sortBy,
-  onSortChange,
-}: {
-  sortBy: SortBy
-  onSortChange: (sortBy: SortBy) => void
-}) {
-  return (
-    <div className="mb-4 flex gap-2">
-      <button
-        type="button"
-        onClick={() => onSortChange('date')}
-        aria-pressed={sortBy === 'date'}
-      >
-        Sort by date
-      </button>
-      <button
-        type="button"
-        onClick={() => onSortChange('category')}
-        aria-pressed={sortBy === 'category'}
-      >
-        Sort by category
-      </button>
-    </div>
   )
 }
 
@@ -254,13 +247,41 @@ function ActivityRow({ row, budget }: { row: ActivityTableRow; budget: Budget })
   )
 }
 
+function GroupHeaderRow({ categoryName }: { categoryName: string }) {
+  return (
+    <tr className="bg-neutral-100 text-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-100">
+      <th
+        className="border border-neutral-300 px-3 py-2 text-left text-base font-semibold dark:border-neutral-700"
+        colSpan={6}
+      >
+        {categoryName}
+      </th>
+    </tr>
+  )
+}
+
+function GroupSubtotalRow({ categoryName, subtotal }: { categoryName: string; subtotal: number }) {
+  return (
+    <tr className="bg-neutral-50 font-semibold dark:bg-neutral-900/60">
+      <td className="border border-neutral-300 px-3 py-2 dark:border-neutral-700" colSpan={5}>
+        {`${categoryName} subtotal`}
+      </td>
+      <td className="border border-neutral-300 px-3 py-2 dark:border-neutral-700">
+        {formatNumber(subtotal)}
+      </td>
+    </tr>
+  )
+}
+
 export function ActivityTable({ budget }: Props) {
-  const [sortBy, setSortBy] = useState<SortBy>('date')
-  const rows = deriveRows(budget, sortBy)
+  const groups = deriveGroups(budget)
+
+  if (groups.length === 0) {
+    return <div className="p-4 text-sm text-neutral-500">No activities yet</div>
+  }
 
   return (
     <div className="overflow-x-auto p-4">
-      <SortControls sortBy={sortBy} onSortChange={setSortBy} />
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr>
@@ -282,12 +303,20 @@ export function ActivityTable({ budget }: Props) {
             <th className="border border-neutral-300 bg-neutral-50 px-3 py-2 text-left font-semibold dark:border-neutral-700 dark:bg-neutral-800">
               Total Price
             </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <ActivityRow key={`${row.date}-${row.activity.id}`} budget={budget} row={row} />
-          ))}
+            </tr>
+          </thead>
+          <tbody>
+          {groups.flatMap((group) => [
+            <GroupHeaderRow key={`${group.categoryId ?? 'uncategorized'}-header`} categoryName={group.categoryName} />,
+            ...group.rows.map((row) => (
+              <ActivityRow key={`${row.date}-${row.activity.id}`} budget={budget} row={row} />
+            )),
+            <GroupSubtotalRow
+              key={`${group.categoryId ?? 'uncategorized'}-subtotal`}
+              categoryName={group.categoryName}
+              subtotal={group.subtotal}
+            />,
+          ])}
         </tbody>
       </table>
     </div>

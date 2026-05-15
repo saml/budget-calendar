@@ -29,17 +29,21 @@ budget-calendar/
     ├── utils/
     │   ├── dateUtils.ts     ← generateDays, toCalendarEvent
     │   ├── budgetUtils.ts   ← calcTotalCost, formatNumber
-    │   └── importExport.ts  ← slugify, parseBudget, exportBudget
+    │   ├── importExport.ts  ← slugify, parseBudget, exportBudget
+    │   └── categorySummary.ts ← category cost aggregation for analytics
     └── components/
         ├── BudgetList/      ← Budget list page + create form
         │   ├── BudgetList.tsx
         │   ├── BudgetForm.tsx
         │   └── ImportButton.tsx
-        ├── BudgetDetail/    ← Calendar/table detail page header + layout
+        ├── BudgetDetail/    ← Calendar/table/analytics detail page header + layout
         │   └── BudgetDetail.tsx
         ├── ActivityTable/   ← Read-only activity table view
         │   ├── ActivityTable.tsx
         │   └── ActivityTable.test.tsx
+        ├── Analytics/       ← Budget cost breakdown pie chart + legend
+        │   ├── AnalyticsView.tsx
+        │   └── AnalyticsView.test.tsx
         ├── Calendar/        ← FullCalendar wrapper
         │   └── CalendarView.tsx
         ├── Activity/        ← Add/edit Activity modal form
